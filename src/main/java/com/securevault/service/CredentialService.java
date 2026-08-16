@@ -16,12 +16,17 @@ public class CredentialService {
 
     @Autowired
     private CredentialRepository credentialRepository;
+    @Autowired
+    private EncryptionService encryptionService;
 
-    public Credential createCredential(CredentialRequest request){
+    public Credential createCredential (CredentialRequest request)throws Exception{
         Credential credential = new Credential();
         credential.setTitle(request.getTitle());
         credential.setUsername(request.getUsername());
         credential.setNotes(request.getNotes());
+        String encryptedPassword= encryptionService.encrypt(request.getPassword());
+        credential.setEncryptedPassword(encryptedPassword);
+
         return credentialRepository.save(credential);
     }
 
@@ -29,8 +34,12 @@ public class CredentialService {
         return credentialRepository.findAll();
     }
 
-    public Optional<Credential> getCredentialById(Long id){
-        return credentialRepository.findById(id);
+    public Credential getCredentialById(Long id) throws Exception{
+        Credential credential = credentialRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Credential not found"));
+        String decryptedPassword= encryptionService.decrypt(credential.getEncryptedPassword());
+        credential.setEncryptedPassword(decryptedPassword);
+        return credential;
     }
 
     public Credential updateCredential(Long id, CredentialRequest request){
@@ -46,6 +55,4 @@ public class CredentialService {
     public void deleteById(Long id){
         credentialRepository.deleteById(id);
     }
-
-
 }

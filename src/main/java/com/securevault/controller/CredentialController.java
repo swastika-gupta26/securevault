@@ -20,7 +20,7 @@ public class CredentialController {
     private CredentialRepository credentialRepository;
 
     @PostMapping
-    public Credential createCredential(@Valid @RequestBody CredentialRequest request){
+    public Credential createCredential(@Valid @RequestBody CredentialRequest request)throws Exception{
        return credentialService.createCredential(request);
     }
 
@@ -30,7 +30,7 @@ public class CredentialController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Credential> getCredentialById(@PathVariable Long id){
+    public Credential getCredentialById(@PathVariable Long id) throws Exception{
         return credentialService.getCredentialById(id);
     }
     @PutMapping("/{id}")

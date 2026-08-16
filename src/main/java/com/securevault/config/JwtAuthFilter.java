@@ -41,6 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
+        System.out.println("JWT FILTER HIT: " + email);
         filterChain.doFilter(request, response);
     }
 
