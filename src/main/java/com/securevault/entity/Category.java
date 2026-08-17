@@ -13,14 +13,19 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable= false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name= "parent_id")
+    private Category parentCategory;
     public Category(){
     }
 
-    public Category(Long id, String name, String description, User user) {
+    public Category(Long id, String name, String description, User user, Category parentCategory) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.user = user;
+        this.parentCategory = parentCategory;
     }
 
     public Long getId() {
@@ -53,5 +58,13 @@ public class Category {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Category getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(Category parentCategory) {
+        this.parentCategory = parentCategory;
     }
 }

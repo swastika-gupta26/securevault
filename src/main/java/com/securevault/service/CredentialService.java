@@ -1,7 +1,9 @@
 package com.securevault.service;
 
 import com.securevault.dto.CredentialRequest;
+import com.securevault.entity.Category;
 import com.securevault.entity.Credential;
+import com.securevault.repository.CategoryRepository;
 import com.securevault.repository.CredentialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,8 @@ import java.util.Optional;
 public class CredentialService {
     @Autowired
     private JwtService jwtservice;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Autowired
     private CredentialRepository credentialRepository;
     @Autowired
@@ -24,6 +27,10 @@ public class CredentialService {
         credential.setTitle(request.getTitle());
         credential.setUsername(request.getUsername());
         credential.setNotes(request.getNotes());
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        credential.setCategory(category);
         String encryptedPassword= encryptionService.encrypt(request.getPassword());
         credential.setEncryptedPassword(encryptedPassword);
 
@@ -48,11 +55,19 @@ public class CredentialService {
         credential.setUsername(request.getUsername());
         credential.setNotes(request.getNotes());
         credential.setTitle(request.getTitle());
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        credential.setCategory(category);
 
        return credentialRepository.save(credential);
 
     }
     public void deleteById(Long id){
         credentialRepository.deleteById(id);
+    }
+
+    public List<Credential> getCredentialByCategory(Long categoryId){
+        return credentialRepository.findByCategoryId(categoryId);
     }
 }

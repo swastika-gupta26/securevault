@@ -23,6 +23,10 @@ public class CredentialController {
     public Credential createCredential(@Valid @RequestBody CredentialRequest request)throws Exception{
        return credentialService.createCredential(request);
     }
+    @GetMapping("/category/{categoryId}")
+    public List<Credential> getCredentialByCategory(@PathVariable Long categoryId){
+        return credentialService.getCredentialByCategory(categoryId);
+    }
 
     @GetMapping
     public List<Credential> getAllCredential(){
@@ -42,4 +46,6 @@ public class CredentialController {
     public void deleteById(@PathVariable Long id){
           credentialService.deleteById(id);
     }
+
+
 }
