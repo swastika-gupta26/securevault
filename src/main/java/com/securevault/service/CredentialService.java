@@ -6,6 +6,8 @@ import com.securevault.entity.Credential;
 import com.securevault.repository.CategoryRepository;
 import com.securevault.repository.CredentialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +42,9 @@ public class CredentialService {
     public List<Credential> getAllCredential(){
         return credentialRepository.findAll();
     }
+    public Page<Credential> getAllCredentials(Pageable pageable){
+        return credentialRepository.findAll(pageable);
+    }
 
     public Credential getCredentialById(Long id) throws Exception{
         Credential credential = credentialRepository.findById(id)
@@ -69,6 +74,9 @@ public class CredentialService {
 
     public List<Credential> getCredentialByCategory(Long categoryId){
         return credentialRepository.findByCategoryId(categoryId);
-
     }
+    public Page<Credential> searchCredentials(String title, Pageable pageable){
+        return credentialRepository.findByTitleContainingIgnoreCase(title, pageable);
+    }
+
 }

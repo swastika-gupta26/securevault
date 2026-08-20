@@ -6,6 +6,10 @@ import com.securevault.repository.CredentialRepository;
 import com.securevault.service.CredentialService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +37,23 @@ public class CredentialController {
         return credentialService.getAllCredential();
     }
 
+    @GetMapping("/search")
+    public Page<Credential> searchCredential(
+            @RequestParam String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return credentialService.searchCredentials(title, pageable);
+    }
+
     @GetMapping("/{id}")
     public Credential getCredentialById(@PathVariable Long id) throws Exception{
         return credentialService.getCredentialById(id);
@@ -47,5 +68,18 @@ public class CredentialController {
           credentialService.deleteById(id);
     }
 
+    @GetMapping("/page")
+    public Page<Credential> getAllCredentials(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+             @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return credentialService.getAllCredentials(pageable);
+    }
 
 }
