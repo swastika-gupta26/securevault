@@ -69,5 +69,6 @@ public class CredentialService {
 
     public List<Credential> getCredentialByCategory(Long categoryId){
         return credentialRepository.findByCategoryId(categoryId);
+
     }
 }

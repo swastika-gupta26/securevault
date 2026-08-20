@@ -9,8 +9,10 @@ public class CredentialRequest {
     @Size(max = 100, message = "Title must not exceed 100 characters")
     private String title;
     @NotBlank(message = "Username is required")
+    @Size(max = 100, message = "Username must not exceed 100 characters")
     private String username;
     @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
     private String password;
     @Size(max = 500, message = "Notes must not exceed 500 characters")
     private String notes;

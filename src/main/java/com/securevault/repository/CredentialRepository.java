@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface CredentialRepository extends JpaRepository<Credential, Long> {
     List<Credential> findByCategoryId(Long categoryId);
+    List<Credential> findByTitleContainingIgnoreCase(String title);
 
 }
