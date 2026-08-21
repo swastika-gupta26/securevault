@@ -3,11 +3,14 @@ package com.securevault.service;
 import com.securevault.dto.CredentialRequest;
 import com.securevault.entity.Category;
 import com.securevault.entity.Credential;
+import com.securevault.entity.User;
 import com.securevault.repository.CategoryRepository;
 import com.securevault.repository.CredentialRepository;
+import com.securevault.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +26,13 @@ public class CredentialService {
     private CredentialRepository credentialRepository;
     @Autowired
     private EncryptionService encryptionService;
+    @Autowired
+    private AuditLogService auditLogService;
 
-    public Credential createCredential (CredentialRequest request)throws Exception{
+    @Autowired
+    private UserRepository userRepository;
+
+    public Credential createCredential (CredentialRequest request, String email)throws Exception{
         Credential credential = new Credential();
         credential.setTitle(request.getTitle());
         credential.setUsername(request.getUsername());
@@ -54,7 +62,8 @@ public class CredentialService {
         return credential;
     }
 
-    public Credential updateCredential(Long id, CredentialRequest request){
+    public Credential updateCredential(Long id, CredentialRequest request,  String email){
+
         Credential credential = credentialRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Credential not found!"));
         credential.setUsername(request.getUsername());
@@ -64,12 +73,26 @@ public class CredentialService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         credential.setCategory(category);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-       return credentialRepository.save(credential);
+        Credential updatedCredential = credentialRepository.save(credential);
+
+        auditLogService.log("UPDATE_CREDENTIAL", user);
+
+        return updatedCredential;
 
     }
-    public void deleteById(Long id){
-        credentialRepository.deleteById(id);
+    public void deleteById(Long id, String email){
+        Credential credential = credentialRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Credential not found"));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        credentialRepository.delete(credential);
+
+        auditLogService.log("DELETE_CREDENTIAL", user);
     }
 
     public List<Credential> getCredentialByCategory(Long categoryId){

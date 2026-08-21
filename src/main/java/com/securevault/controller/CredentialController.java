@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +25,9 @@ public class CredentialController {
     private CredentialRepository credentialRepository;
 
     @PostMapping
-    public Credential createCredential(@Valid @RequestBody CredentialRequest request)throws Exception{
-       return credentialService.createCredential(request);
+    public Credential createCredential(@Valid @RequestBody CredentialRequest request, Authentication authentication)throws Exception{
+        String email= authentication.getName();
+       return credentialService.createCredential(request, email);
     }
     @GetMapping("/category/{categoryId}")
     public List<Credential> getCredentialByCategory(@PathVariable Long categoryId){
@@ -60,12 +62,14 @@ public class CredentialController {
     }
     @PutMapping("/{id}")
     public Credential updateCredential(@PathVariable Long id,
-                                       @Valid @RequestBody CredentialRequest request){
-       return credentialService.updateCredential(id, request);
+                                       @Valid @RequestBody CredentialRequest request, Authentication authentication){
+        String email = authentication.getName();
+       return credentialService.updateCredential(id, request, email);
     }
     @DeleteMapping ("/{id}")
-    public void deleteById(@PathVariable Long id){
-          credentialService.deleteById(id);
+    public void deleteById(@PathVariable Long id,  Authentication authentication){
+        String email = authentication.getName();
+        credentialService.deleteById(id, email);
     }
 
     @GetMapping("/page")

@@ -24,6 +24,9 @@ public class AuthService {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     public String register(RegisterRequest request) {
 
         Optional<User> existingUser =
@@ -66,8 +69,11 @@ public class AuthService {
                 );
 
         if (!passwordMatches) {
+            auditLogService.log("LOGIN_FAILED", user.get());
+
             throw new RuntimeException("Invalid email or password");
         }
+        auditLogService.log("LOGIN_SUCCESS", user.get());
 
         String accessToken =
                 jwtService.generateAccessToken(user.get());
