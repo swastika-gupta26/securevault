@@ -3,6 +3,9 @@
     <envs>
       <env name="DB_PASSWORD" value="swastika2606" />
       <env name="DB_USERNAME" value="postgres" />
+      <env name="ENCRYPTION_KEY" value="q7Yx3Kp9Vn2Lm8Rz4Tq6Wc1Hs5Jf0Dg8P2aN7mXk9Qs=" />
+      <env name="JWT_SECRET" value="WyPq+TXq+7OBu/+Wf/XIb5hi+YrHF5pOP7/v93Maj7I=" />
+      <env name="DB_URL" value="jdbc:postgresql://localhost:5432/securevault" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="com.securevault.SecureVaultApplication" />
     <module name="securevault" />
