@@ -66,10 +66,44 @@ SecureVault is a secure credential management backend that allows users to store
 | `JWT_SECRET` | Secret key for JWT |
 | `ENCRYPTION_KEY` | AES-256-GCM encryption key |
 
-
-
 ## How to Run
 
 ```bash
 git clone <repo-url>
 cd securevault
+
+# Set environment variables (create a .env file or export directly)
+export DB_URL=jdbc:postgresql://localhost:5432/securevault
+export DB_USERNAME=your_db_username
+export DB_PASSWORD=your_db_password
+export JWT_SECRET=your_jwt_secret
+export ENCRYPTION_KEY=your_encryption_key
+
+# Build the project
+mvn clean install
+
+# Run the application
+mvn spring-boot:run
+```
+
+### Run with Docker
+
+```bash
+docker build -t securevault .
+docker run -p 8080:8080 --env-file .env securevault
+```
+
+The application will start on `http://localhost:8080`
+
+## API Documentation
+
+Interactive API documentation is available via Swagger UI:
+
+- **Swagger UI:** [https://securevault-backend-qdvg.onrender.com/swagger-ui/index.html](https://securevault-backend-qdvg.onrender.com/swagger-ui/index.html)
+- **Base URL:** [https://securevault-backend-qdvg.onrender.com](https://securevault-backend-qdvg.onrender.com)
+
+## Live Demo
+
+The backend is deployed and hosted at:
+
+🔗 **https://securevault-backend-qdvg.onrender.com**
