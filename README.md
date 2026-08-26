@@ -66,7 +66,7 @@ SecureVault is a secure credential management backend that allows users to store
 | `JWT_SECRET` | Secret key for JWT |
 | `ENCRYPTION_KEY` | AES-256-GCM encryption key |
 
-> Never commit real passwords or secret keys to GitHub.
+
 
 ## How to Run
 
